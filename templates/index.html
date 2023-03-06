@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{% if user.is_authenticated %}
+<button type button class="btn btn-light mx-5">	        		
+	<div class="nav-item mx-3 fs-4">  
+		<div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ user.profile_pic.url }}"
+                class="border border-primary-subtle rounded-circle img-fluid" style="width: 55px; height: 55px;" />
+            {{ user.username }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" data-bs-toggle='modal' data-bs-target='#exampleModal'>Logout</a></li>
+          </ul>
+        </div>
+    </div>
+    {% else %}
+		<button type button class="btn btn-light mx-4">	        		
+			<div class="nav-item mx-3 fs-4">
+	    			<a class="nav-link active" aria-current="page" href="{% url 'signin' %}">Войти</a>	
+			</div>
+		</button>
+	{% endif %}  	    
+</div>
+</div>
+</nav>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Logout</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to logout?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href='{% url "logout" %}' role="button" class="btn btn-primary">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% if user.is_authenticated %}
+	{% if notes %}
+    {% for i in notes %}
+      {% if forloop.first %}
+        <div class="row my-5 mx-3">
+      {% endif %}
+      <div class="card col-sm-3 mx-3 border-primary" style="height: 12rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{ i.title }}</h5>
+          <p class="card-text">{{ i.body }}</p>
+        </div>
+        <div class='align-self-end ml-auto mx-1 my-3'>
+            <a href="{% url 'edit_note' id=i.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'delete_note' id=i.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a> 
+        </div>
+      </div>
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row my-5 mx-3">{% endif %}
+    {% if forloop.last %}
+      </div>
+    {% endif %}
+    {% endfor %}
+  {% else %}
+  <div>
+    <h1 class = 'text-center my-5'>You don`t have any notes yet</h1>
+    <h4 class = 'text-center my-5'>Do you want to <a href='{% url "create_note" %}'>create</a> one?</h4>
+  </div>
+  {% endif %}
+{% else %}
+  <div>
+    <h1 class = 'text-center my-5'>You aren`t signed in yet</h1>
+    <h4 class = 'text-center my-5'>Do you want to <a href='{% url "signin" %}'>login</a>?</h4>
+  </div>
+{% endif %}
+{% endblock content %}

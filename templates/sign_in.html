@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load socialaccount %}	    
+  <button type button class="btn btn-light mx-5">             
+  <div class="nav-item mx-3 fs-4">  
+  {% if user.is_authenticated %}
+    <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ user.profile_pic.url }}"
+                class="border border-primary-subtle rounded-circle img-fluid" style="width: 55px; height: 55px;" />
+            {{ user.username }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" data-bs-toggle='modal' data-bs-target='#exampleModal'>Logout</a></li>
+          </ul>
+        </div>
+    </div>
+    </div>
+</div>
+</nav>
+<section class='w-100 p-4 d-flex justify-content-center pb-4 my-5'> 
+  <div class="my-5" style='width: 30rem;'>
+    <p class = 'display-6'>You are already logged in!~</p>
+    <p class="display-6 text-center">Want to <a data-bs-toggle='modal' href='#exampleModal'>logout</a>?</p>
+    <p class="display-6 text-center">Or go to <a href='{% url "home" %}'>Home Page</a>.</p>
+  </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Logout</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to logout?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href='{% url "logout" %}' role="button" class="btn btn-primary">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+  {% elif created %}
+          <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ user.username }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" data-bs-toggle='modal' data-bs-target='#exampleModal'>Logout</a></li>
+          </ul>
+        </div>
+    </div>
+    </div>
+</div>
+</nav>
+<section class='w-100 p-4 d-flex justify-content-center pb-4 my-5'> 
+  <div class="my-5" style='width: 40rem;'>
+    <p class = 'display-6'>You were Successfully Registered!~</p>
+    <p class="display-6 text-center">Want to <a href='{% url "signin" %}'>login</a>?</p>
+    <p class="display-6 text-center">Or go to <a href='{% url "home" %}'>Home Page</a>.</p>
+  </div>
+</section>
+  {% else %}
+  <button type button class="btn btn-light mx-5">             
+  <div class="nav-item mx-3 fs-4">  
+          <a class="nav-link active" aria-current="page" href="{% url 'signin' %}">Войти</a>
+        </div>
+      </button>       
+    </div>
+  </div>
+</nav>
+  <section class='w-100 p-4 d-flex justify-content-center pb-4 my-5'> 
+    <div class="my-5" style='width: 26rem;'>
+
+
+      <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Login</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab" aria-controls="pills-register" aria-selected="false">Register</button>
+        </li>
+      </ul>
+
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab" tabindex="0">
+    <form method="POST">
+  {% csrf_token %}
+      <div class="text-center mb-3">
+        <p>Sign in with :</p>
+          <a href='{% provider_login_url "facebook" method="oauth2" %}' role="button" class="btn btn-link btn-floating mx-1">
+            <i class="bi bi-facebook" style='font-size: 30px;'></i>
+          </a>
+
+          <a href='{% provider_login_url "google" method="oauth2" %}' role="button" class="btn btn-link btn-floating mx-1">
+            <i class="bi bi-google" style='font-size: 30px;'></i>
+          </a>
+      </div>
+
+      <p class="text-center">or :</p>
+    {% if login_data_error %}        
+      <!-- Email input -->
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control is-invalid" id="emailInput" placeholder="name@example.com" name='email_login' value="{{ email }}">
+        <label for="emailLogin">Email</label>
+        <div id="emailInput" class="invalid-feedback">
+          You must fill all of the fields!
+        </div>
+      </div>
+
+      <!-- Password input -->
+      <div class="form-floating mb-4">
+        <input type="password" class="form-control is-invalid" id="passwordInput" placeholder="password" name="password_login">
+        <label for="passwordLogin">Password</label>
+      </div>
+    {% elif invalid_data_error %}
+    <!-- Email input -->
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control is-invalid" id="emailInput" placeholder="name@example.com" name='email_login' value="{{ email }}">
+      <label for="emailLogin">Email</label>
+      <div id="emailInput" class="invalid-feedback">
+        Invalid username/password.
+      </div>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-floating mb-4">
+      <input type="password" class="form-control is-invalid" id="passwordInput" placeholder="password" name="password_login">
+      <label for="passwordLogin">Password</label>
+    </div>
+    {% else %}
+    <!-- Email input -->
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" name='email_login'>
+      <label for="emailLogin">Email</label>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-floating mb-4">
+      <input type="password" class="form-control" id="passwordInput" placeholder="password" name="password_login">
+      <label for="passwordLogin">Password</label>
+    </div>
+    {% endif %}
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4 shadow" style = "width:100%;" name='login'>Sign in</button>
+
+      <div class="text-center">
+        <p>Not a member? <a href="#!">Register</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+	
+
+  
+<!-- Register buttons -->
+  <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab" tabindex="0">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="text-center mb-3">
+        <p>Sign up with :</p>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="bi bi-facebook" style='font-size: 30px;'></i>
+          </button>
+
+          <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="bi bi-google" style='font-size: 30px;'></i>
+          </button>
+      </div>
+
+      <p class="text-center">or :</p>
+  {% if register_data_error %}
+  <!-- Email input -->
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control is-invalid" id="emailInput" placeholder="example@email.com" name = 'email_register' value = "{{ email }}">
+    <label for="emailRegister">Email</label>
+  </div>
+
+  <!-- Password input -->
+  <div class="form-floating mb-3">
+    <input type="password" class="form-control is-invalid" id="password1Input" placeholder="password" name = 'password_register'>
+    <label for="password1Register">Password</label>
+    <div id="password1Input" class="invalid-feedback">
+        You must feel all of the fields!
+      </div>
+  </div>
+
+  <!-- Repeat Password input -->
+  <div class="form-floating mb-5">
+    <input type="password" class="form-control is-invalid" id="password2Input" placeholder="password again" name='password2_register'>
+    <label for="password2Register">Repeat password</label>
+  </div>
+  {% elif password_equity_error %}
+  <!-- Email input -->
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control" id="emailInput" placeholder="example@email.com" name = 'email_register' value = "{{ email }}">
+    <label for="emailRegister">Email</label>
+  </div>
+
+  <!-- Password input -->
+  <div class="form-floating mb-3">
+    <input type="password" class="form-control is-invalid" id="password1Input" placeholder="password" name = 'password_register'>
+    <label for="password1Register">Password</label>
+    <div id="password1Input" class="invalid-feedback">
+        Passwords aren`t same!
+      </div>
+  </div>
+
+  <!-- Repeat Password input -->
+  <div class="form-floating mb-5">
+    <input type="password" class="form-control is-invalid" id="password2Input" placeholder="password again" name='password2_register'>
+    <label for="password2Register">Repeat password</label>
+  </div>
+  {% elif email_error %}
+  <!-- Email input -->
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control is-invalid" id="emailInput" placeholder="example@email.com" name = 'email_register' value = "{{ email }}">
+    <label for="emailRegister">Email</label>
+    <div id="emailInput" class="invalid-feedback">
+        User with this email already exists!
+      </div>
+  </div>
+
+  <!-- Password input -->
+  <div class="form-floating mb-3">
+    <input type="password" class="form-control" id="password1Input" placeholder="password" name = 'password_register'>
+    <label for="password1Register">Password</label>
+  </div>
+
+  <!-- Repeat Password input -->
+  <div class="form-floating mb-5">
+    <input type="password" class="form-control" id="password2Input" placeholder="password again" name='password2_register'>
+    <label for="password2Register">Repeat password</label>
+  </div>
+  {% else %}
+  <!-- Email input -->
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control" id="emailInput" placeholder="example@email.com" name = 'email_register'>
+    <label for="emailRegister">Email</label>
+  </div>
+
+  <!-- Password input -->
+  <div class="form-floating mb-3">
+    <input type="password" class="form-control" id="password1Input" placeholder="password" name = 'password_register'>
+    <label for="password1Register">Password</label>
+  </div>
+
+  <!-- Repeat Password input -->
+  <div class="form-floating mb-5">
+    <input type="password" class="form-control" id="password2Input" placeholder="password again" name='password2_register'>
+    <label for="password2Register">Repeat password</label>
+  </div>
+  {% endif %}
+
+      <!-- Submit button -->
+  <button type="submit" class="btn btn-primary btn-block shadow" style = "width:100%;" name='register'>Sign in</button>
+</form>    
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+{% endif %}
+{% endblock content %}
